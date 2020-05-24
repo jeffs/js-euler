@@ -1,0 +1,48 @@
+.main {
+  display: flex;
+  border: 1px solid red;
+}
+
+.contents__nav {
+  min-height: 80vh;
+  width: 15rem;
+  padding-top: 1rem;
+  border: 1px solid green;
+}
+
+.contents__list {
+  margin: 0;
+}
+
+.problem {
+  border: 1px solid blue;
+  padding: 1rem;
+  min-height: 80vh;
+  min-height: 100%;
+  width: 100%;
+}
+
+.problem__title {
+  margin-top: 0;
+}
+
+.problem__description {
+  font-style: italic;
+}
+
+.problem__answer {
+  font-weight: bold;
+}
+
+.table {
+  border-collapse: collapse;
+}
+
+.table th, .table td {
+  border: 1px solid black;
+  padding: 0.5rem;
+}
+
+.table__number {
+  text-align: right;
+}

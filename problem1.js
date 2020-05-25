@@ -1,51 +1,103 @@
 import { create, createStyled } from './create.js';
 
-function renderTableHead() {
-  return create(
-    'thead',
-    create('tr', create('th', 'multiple'), create('th', 'tally')));
+const divisors = [3, 5];
+const bound = 1000;
+
+function findMultiplesBelow(max) {
+  let multiples = [];
+  for (let i = 1; i < max; ++i) {
+    if (divisors.some(c => i % c === 0)) {
+      multiples.push(i);
+    }
+  }
+  return multiples;
 }
 
-function renderTableBodyRow([multiple, tally]) {
-  return create('tr',
-    createStyled('td', ['table__number'], multiple),
-    createStyled('td', ['table__number'], tally));
+function sum(numbers) {
+  return numbers.reduce((a, x) => a + x, 0);
 }
 
-function renderTableBody(rows) {
-  return create('tbody', ...rows.map(renderTableBodyRow));
+function product(numbers) {
+  return numbers.reduce((a, x) => a * x, 1);
 }
 
-function renderTable(rows) {
-  return createStyled(
-    'table',
-    ['table'],
-    renderTableHead(),
-    renderTableBody(rows));
+function formatAnswer(answer) {
+  return createStyled('h3', 'problem__answer', `Answer: ${answer}`);
 }
 
+function formatList(items) {
+  switch (items.length) {
+    case 0: return 'an empty list';
+    case 1: return items[0];
+    case 2: return items.join(' and ');
+    default: {
+      const m = items.length - 1;
+      return `${items.slice(0, m).join(', ')}, and ${items[m]}`;
+    }
+  }
+}
+
+function render() {
+  const period = product(divisors);
+  const series = findMultiplesBelow(period + 1);
+  const comments = [];
+  const p = (...kids) => { comments.push(create('p', ...kids)); };
+  const c = (text) => { comments.push(createStyled('pre', 'math', text)); };
+
+  const answer = sum(Array.from(Array(bound).keys()).filter(k => divisors.some(d => k % d === 0)));
+
+  p(`The quick and dirty way to calculate this particular sum is brute force.
+    For example, as a Python one-liner:`);
+  c(`>>> sum(i for i in range(${bound})`
+    + ` if any(i % d == 0 for d in [${divisors.join(', ')}]))`
+    + `\n${answer}`);
+
+  p(`We can also derive a closed form solution.  Note that the sum of multiples
+    of ${formatList(divisors)} in the closed range [1, ${period}] is
+    ${sum(series)}:`);
+  c(`${series.join(' + ')} = ${sum(series)}`);
+
+  p(`The number ${period} is special because it is the product of
+    ${formatList(divisors)}, and modular operations (like checking for
+    divisibility) are periodic with respect to sequences of that length.  Let's
+    call that length (${period}) the `, create('em', 'period'), `.`);
+
+  p(`The sum of multiples in each subsequent series of ${period} numbers is
+    similar to the first, except that each addend in the series is offset by
+    some multiple of ${period}, such that the sum is increased by that multiple
+    times the length of the series.  For example:`);
+  const series1 = series.map(x => x + period);
+  c(`${series1.join(' + ')}`
+    + `\n= ${series.map(x => `(${x} + ${period})`).join(' + ')}`
+    + `\n= (${series.join(' + ')}) + (${series.length} * ${period})`
+    + `\n= ${sum(series)} + ${series.length * period}`
+    + `\n= ${sum(series1)}`);
+
+  const series2 = series.map(x => x + 2 * period);
+  c(`${series2.join(' + ')}`
+    + `\n= ${series.map(x => `(${x} + ${2 * period})`).join(' + ')}`
+    + `\n= (${series.join(' + ')}) + (${series.length} * ${2 * period})`
+    + `\n= ${sum(series)} + ${series.length * 2 * period}`
+    + `\n= ${sum(series2)}`);
+
+  p(`In fact, the sum of multiples of ${formatList(divisors)} in the Nth series
+    of ${period} numbers is always the sum of the first series
+    (${sum(series)}), plus the series length (${series.length}) times the
+    period (${period}) times N, where N is the zero-based index of the
+    series.`);
+
+  return create('div', formatAnswer(answer), ...comments);
+}
+
+//create('table', ...lows.map(n => create('tr', createStyled('td', 'table__number', n)))),
 export default function problem1() {
   return {
     title: 'Multiples of 3 and 5',
-
-    paragraphs: [
+    description: [
       `If we list all the natural numbers below 10 that are multiples of 3 or
       5, we get 3, 5, 6 and 9. The sum of these multiples is 23.`,
       `Find the sum of all the multiples of 3 or 5 below 1000.`
     ],
-
-    render() {
-      let rows = [];
-      let sum = 0;
-      for (let i = 1; i < 1000; ++i) {
-        if (i % 3 === 0 || i % 5 === 0) {
-          sum += i;
-          rows.push([i, sum]);
-        }
-      }
-      const answer = createStyled('h3', ['problem__answer'], `Answer: ${sum}`);
-      const details = renderTable(rows);
-      return create('div', answer, details);
-    },
+    render,
   };
 }

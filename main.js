@@ -12,13 +12,12 @@ const getPane = function () {
       const problem = problems[index];
       const title = createStyled(
         'h2',
-        ['problem__title'],
+        'problem__title',
         `${index + 1}. ${problem.title}`);
-      const paragraphs = problem.paragraphs.map(s => create('p', s));
       const description = createStyled(
         'blockquote',
-        ['problem__description'],
-        ...paragraphs);
+        'problem__description',
+        ...problem.description.map(s => create('p', s)));
       const elem = problem.render();
       panes[index] = create('div', title, description, elem);
     }

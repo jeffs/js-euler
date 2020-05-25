@@ -1,6 +1,6 @@
-export function createStyled(tagName, classNames, ...children) {
+export function createStyled(tagName, className, ...children) {
   const elem = document.createElement(tagName);
-  elem.classList.add(...classNames);
+  elem.classList.add(...className.split(' '));
   elem.append(...children);
   return elem;
 }

@@ -1,5 +1,8 @@
-export function* range(stop) {
-  for (let i = 0; i < stop; ++i) yield i;
+export function* range(start, stop) {
+  if (stop === undefined) {
+    yield* range(0, start);
+  }
+  for (; start < stop; ++start) yield start;
 }
 
 export function* filter(iterable, predicate) {

@@ -1,0 +1,35 @@
+.problem__description {
+  font-style: italic;
+}
+
+.problem__answer {
+  font-weight: bold;
+}
+
+.table__number {
+  text-align: right;
+}
+
+.math {
+  display: block;
+  margin: 1rem;
+  overflow-x: scroll;
+}
+
+.input-box {
+  display: grid;
+  grid-template-columns: max-content auto;
+}
+
+.input-box label {
+  padding-right: 4px;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+th, td {
+  border: 1px solid black;
+  padding: 0.5rem;
+}

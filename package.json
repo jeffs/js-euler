@@ -1,0 +1,25 @@
+{
+  "name": "js-euler",
+  "version": "1.0.0",
+  "description": "Solutions to Project Euler problems in JavaScript",
+  "scripts": {
+    "start": "reload"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jeffs/js-euler.git"
+  },
+  "keywords": [
+    "JavaScript",
+    "Euler"
+  ],
+  "author": "Jeff Schwab <jeff@unbuggy.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jeffs/js-euler/issues"
+  },
+  "homepage": "https://github.com/jeffs/js-euler#readme",
+  "devDependencies": {
+    "reload": "^3.0.5"
+  }
+}

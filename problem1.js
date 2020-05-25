@@ -1,25 +1,8 @@
 import { create, createStyled } from './create.js';
+import { filter, product, range, sum } from './range.js';
 
 const divisors = [3, 5];
 const bound = 1000;
-
-function findMultiplesBelow(max) {
-  let multiples = [];
-  for (let i = 1; i < max; ++i) {
-    if (divisors.some(c => i % c === 0)) {
-      multiples.push(i);
-    }
-  }
-  return multiples;
-}
-
-function sum(numbers) {
-  return numbers.reduce((a, x) => a + x, 0);
-}
-
-function product(numbers) {
-  return numbers.reduce((a, x) => a * x, 1);
-}
 
 function formatAnswer(answer) {
   return createStyled('h3', 'problem__answer', `Answer: ${answer}`);
@@ -39,12 +22,13 @@ function formatList(items) {
 
 function render() {
   const period = product(divisors);
-  const series = findMultiplesBelow(period + 1);
+  const divisible = (value) => divisors.some(d => value % d === 0);
+  const series = [...filter(range(period + 1), divisible)];
   const comments = [];
   const p = (...kids) => { comments.push(create('p', ...kids)); };
   const c = (text) => { comments.push(createStyled('pre', 'math', text)); };
 
-  const answer = sum(Array.from(Array(bound).keys()).filter(k => divisors.some(d => k % d === 0)));
+  const answer = sum(filter(range(bound), k => divisors.some(d => k % d === 0)));
 
   p(`The quick and dirty way to calculate this particular sum is brute force.
     For example, as a Python one-liner:`);
@@ -89,7 +73,6 @@ function render() {
   return create('div', formatAnswer(answer), ...comments);
 }
 
-//create('table', ...lows.map(n => create('tr', createStyled('td', 'table__number', n)))),
 export default function problem1() {
   return {
     title: 'Multiples of 3 and 5',
